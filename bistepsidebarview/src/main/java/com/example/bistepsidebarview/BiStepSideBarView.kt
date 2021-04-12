@@ -8,12 +8,12 @@ import android.graphics.Paint
 import android.graphics.Color
 import android.graphics.Canvas
 
-val bars : Int = 4
+val bars : Int = 7
 val parts : Int = bars + 1
 val scGap : Float = 0.02f / parts
 val strokeFactor : Float = 90f
-val sizeFactor : Float = 4.7f
-val lFactor : Float = 13.5f
+val sizeFactor : Float = 2.7f
+val lFactor : Float = 6.5f
 val delay : Long = 20
 val backColor : Int = Color.parseColor("#BDBDBD")
 val colors : Array<Int> = arrayOf(
@@ -37,22 +37,21 @@ fun Canvas.drawBiStepSideBar(scale : Float, w : Float, h : Float, paint : Paint)
     val sf : Float = scale.sinify()
     val sf1 : Float = sf.divideScale(0, parts)
     val y = h - size
-    var curry : Float = 0f
     var my : Float = 0f
     save()
     translate(w / 2, y)
     for (j in 0..(bars - 1)) {
         val sj : Float = sf.divideScale(j + 1, parts)
-        curry -= lSize * sf.divideScale(j + 1, parts)
+        val curry = -lSize * sj
         save()
         translate(0f, my)
         for (k in 0..1) {
             save()
-            translate(-size / 2, 0f)
+            translate(-size / 2 + size * k, 0f)
             drawLine(0f, 0f, 0f, curry, paint)
             restore()
         }
-        drawLine(-size / 2, curry, -size / 2 + size * sj, curry, paint)
+        drawLine(-size / 2, curry, -size / 2 + size * sf1, curry, paint)
         restore()
         my += curry
     }
