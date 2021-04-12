@@ -194,4 +194,27 @@ class BiStepSideBarView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : BiStepSideBarView) {
+
+        private val animator : Animator = Animator(view)
+        private val bssb : BiStepSideBar = BiStepSideBar(0)
+        private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+        fun render(canvas : Canvas) {
+            canvas.drawColor(backColor)
+            bssb.draw(canvas, paint)
+            animator.animate {
+                bssb.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            bssb.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
