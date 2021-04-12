@@ -219,4 +219,13 @@ class BiStepSideBarView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : BiStepSideBarView {
+            val view : BiStepSideBarView = BiStepSideBarView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
