@@ -1,0 +1,3 @@
+include ':bistepsidebarview'
+include ':app'
+rootProject.name = "LinkedBiStepSideBarView"
