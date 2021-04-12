@@ -54,7 +54,7 @@ fun Canvas.drawBiStepSideBar(scale : Float, w : Float, h : Float, paint : Paint)
         }
         drawLine(-size / 2, curry, -size / 2 + size * sj, curry, paint)
         restore()
-        my -= curry
+        my += curry
     }
     restore()
 }
@@ -128,6 +128,47 @@ class BiStepSideBarView(ctx : Context) : View(ctx) {
             if (animated) {
                 animated  = false
             }
+        }
+    }
+
+    data class BSSBNode(var i : Int, val state : State = State()) {
+
+        private var next : BSSBNode? = null
+        private var prev : BSSBNode? = null
+
+        init {
+            addNeighbor()
+        }
+
+        fun addNeighbor() {
+            if (i < colors.size - 1) {
+                next = BSSBNode(i + 1)
+                next?.prev = this
+            }
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            canvas.drawBSSBNode(i, state.scale, paint)
+        }
+
+        fun update(cb : (Float) -> Unit) {
+            state.update(cb)
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            state.startUpdating(cb)
+        }
+
+        fun getNext(dir : Int, cb : () -> Unit) : BSSBNode {
+            var curr : BSSBNode? = prev
+            if (dir == 1) {
+                curr = next
+            }
+            if (curr != null) {
+                return curr
+            }
+            cb()
+            return this
         }
     }
 }
