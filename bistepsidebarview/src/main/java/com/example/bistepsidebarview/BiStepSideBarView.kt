@@ -30,3 +30,40 @@ fun Int.inverse() : Float = 1f / this
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.sinify() : Float = Math.sin(this * Math.PI).toFloat()
+
+fun Canvas.drawBiStepSideBar(scale : Float, w : Float, h : Float, paint : Paint) {
+    val size : Float = Math.min(w, h) / sizeFactor
+    val lSize : Float = Math.min(w, h) / lFactor
+    val sf : Float = scale.sinify()
+    val sf1 : Float = sf.divideScale(0, parts)
+    val y = h - size
+    var curry : Float = 0f
+    var my : Float = 0f
+    save()
+    translate(w / 2, y)
+    for (j in 0..(bars - 1)) {
+        val sj : Float = sf.divideScale(j + 1, parts)
+        curry -= lSize * sf.divideScale(j + 1, parts)
+        save()
+        translate(0f, my)
+        for (k in 0..1) {
+            save()
+            translate(-size / 2, 0f)
+            drawLine(0f, 0f, 0f, curry, paint)
+            restore()
+        }
+        drawLine(-size / 2, curry, -size / 2 + size * sj, curry, paint)
+        restore()
+        my -= curry
+    }
+    restore()
+}
+
+fun Canvas.drawBSSBNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    paint.color = colors[i]
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.strokeWidth = Math.min(w, h) / strokeFactor
+    drawBiStepSideBar(scale, w, h, paint)
+}
